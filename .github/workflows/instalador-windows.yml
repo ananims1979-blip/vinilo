@@ -1,36 +1,45 @@
-# This is a basic workflow to help you get started with Actions
+# Arma el instalador de Windows de la app en una computadora de GitHub.
+# Se ejecuta solo cada vez que subes cambios, o con el botón "Run workflow".
+name: Instalador de Windows
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Copiar el proyecto
+        uses: actions/checkout@v5
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Instalar Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Buscar la carpeta del proyecto
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          archivo=$(git ls-files 'package.json' '*/package.json' | head -1)
+          if [ -z "$archivo" ]; then echo "No se encontró package.json. Sube los archivos de la app."; exit 1; fi
+          echo "CARPETA=$(dirname "$archivo")" >> "$GITHUB_ENV"
+
+      - name: Instalar lo necesario
+        working-directory: ${{ env.CARPETA }}
+        run: npm install
+
+      - name: Armar el instalador
+        working-directory: ${{ env.CARPETA }}
+        run: |
+          node preparar.js
+          npx electron-builder --win --x64 --publish never
+
+      - name: Guardar el instalador para descargarlo
+        uses: actions/upload-artifact@v4
+        with:
+          name: Instalador-Windows
+          path: ${{ env.CARPETA }}/dist/*.exe
+          if-no-files-found: error
