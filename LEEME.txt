@@ -1,0 +1,40 @@
+VINILO - VERSIÓN APP
+=============================
+
+A) ARMAR LA APP (solo tú, una vez por sistema)
+----------------------------------------------
+Necesitas Node.js en la computadora donde armes la app.
+Abre la Terminal (Mac) o CMD (Windows) dentro de esta carpeta.
+
+EN MAC:
+   npm install
+   npm run mac
+   -> Se crea: dist/Vinilo-Mac.dmg
+
+EN WINDOWS (en una PC con Windows):
+   npm install
+   npm run windows
+   -> Se crea: dist/Vinilo-Windows.exe
+
+Para probarla antes de armarla: npm start
+
+Comparte SOLO el archivo .dmg o .exe de la carpeta "dist".
+
+
+B) PARA QUIEN RECIBE LA APP
+---------------------------
+MAC (con chip Apple M1 o más nuevo):
+1. Abrir el .dmg y arrastrar "Vinilo" a Aplicaciones.
+2. La primera vez el Mac la bloqueará. Ir a:
+   Ajustes del Sistema > Privacidad y seguridad > "Abrir igualmente".
+3. Si dice que la app "está dañada", abrir la Terminal y escribir:
+   xattr -cr "/Applications/Vinilo.app"
+
+WINDOWS:
+1. Abrir el .exe (se instala solo y crea un acceso directo).
+2. Si aparece "Windows protegió tu PC":
+   "Más información" > "Ejecutar de todas formas".
+
+Las canciones se guardan en la carpeta Música > Descargador MP3.
+El nombre, el ícono, el tema y el color se cambian en Ajustes.
+La app necesita internet.

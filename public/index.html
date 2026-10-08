@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="auto">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vinilo</title>
+  <link rel="icon" id="favicon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="app">
+    <!-- ================= Menú lateral ================= -->
+    <aside class="lateral">
+      <div class="marca">
+        <span class="logo" id="logo" aria-hidden="true"></span>
+        <span class="marca-nombre" id="nombreApp">Vinilo</span>
+      </div>
+
+      <nav class="menu" aria-label="Secciones">
+        <button class="menu-item" data-vista="inicio">
+          <svg viewBox="0 0 24 24"><path d="M12 3 3 10v11h6v-6h6v6h6V10z"/></svg>
+          <span>Inicio</span>
+        </button>
+        <button class="menu-item" data-vista="canciones">
+          <svg viewBox="0 0 24 24"><path d="M9 18V6l11-2v12" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6.5" cy="18" r="2.8"/><circle cx="17.5" cy="16" r="2.8"/></svg>
+          <span>Canciones</span>
+        </button>
+        <button class="menu-item" data-vista="listas">
+          <svg viewBox="0 0 24 24"><path d="M3 6h13v2H3zm0 5h13v2H3zm0 5h8v2H3zm14-2v-4h2v4h4v2h-4v4h-2v-4h-4v-2z"/></svg>
+          <span>Listas</span>
+        </button>
+        <button class="menu-item" data-vista="sonando">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5"/></svg>
+          <span>Sonando</span>
+        </button>
+        <button class="menu-item" data-vista="ajustes">
+          <svg viewBox="0 0 24 24"><path d="M3 7h10M17 7h4M3 17h4M11 17h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="17" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Ajustes</span>
+        </button>
+      </nav>
+
+      <div class="lateral-listas">
+        <div class="lateral-titulo">
+          <span>Tus listas</span>
+          <button class="btn-mini" id="btnNuevaListaLateral" aria-label="Crear lista">
+            <svg viewBox="0 0 24 24"><path d="M11 5h2v14h-2zM5 11h14v2H5z"/></svg>
+          </button>
+        </div>
+        <ul id="menuListas"></ul>
+      </div>
+    </aside>
+
+    <!-- ================= Contenido ================= -->
+    <main class="principal" id="principal">
+      <p class="aviso-conexion" id="avisoConexion" hidden>No se pudo conectar con el programa. Ciérralo y vuelve a abrirlo.</p>
+
+      <!-- Inicio -->
+      <section class="vista" id="vista-inicio">
+        <h1 class="saludo" id="saludo">Hola</h1>
+
+        <div class="descarga">
+          <label for="links" class="descarga-titulo">Agrega canciones desde YouTube</label>
+          <textarea id="links" rows="3" placeholder="Pega uno o varios links de YouTube, uno por línea" spellcheck="false"></textarea>
+          <div class="descarga-pie">
+            <label class="calidad">
+              <span>Calidad</span>
+              <select id="calidad">
+                <option value="128">128 kbps</option>
+                <option value="192" selected>192 kbps</option>
+                <option value="320">320 kbps</option>
+              </select>
+            </label>
+            <button id="btnDescargar" class="btn-acento">Descargar</button>
+          </div>
+
+          <div class="progreso" id="progreso" hidden>
+            <div class="progreso-texto">
+              <span class="progreso-titulo" id="tituloActual"></span>
+              <span class="progreso-cuenta" id="contador"></span>
+            </div>
+            <div class="barra"><div class="relleno" id="relleno"></div></div>
+            <p class="progreso-estado" id="estado"></p>
+          </div>
+          <ul class="avisos" id="avisos"></ul>
+        </div>
+
+        <div class="seccion-cabecera">
+          <h2>Agregadas recientemente</h2>
+          <button class="btn-texto" data-ir="canciones">Ver todas</button>
+        </div>
+        <div class="mosaico" id="recientes"></div>
+      </section>
+
+      <!-- Canciones -->
+      <section class="vista" id="vista-canciones" hidden>
+        <div class="vista-cabecera">
+          <div>
+            <h1>Canciones</h1>
+            <p class="detalle" id="detalleCanciones"></p>
+          </div>
+          <div class="acciones">
+            <button class="btn-acento" id="btnTodas">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Reproducir todo
+            </button>
+            <button class="btn-borde" id="btnCarpeta">Abrir carpeta</button>
+          </div>
+        </div>
+        <input class="buscar" id="buscar" type="search" placeholder="Buscar canción" aria-label="Buscar canción">
+        <ul class="filas" id="canciones"></ul>
+      </section>
+
+      <!-- Todas las listas -->
+      <section class="vista" id="vista-listas" hidden>
+        <div class="vista-cabecera">
+          <h1>Listas</h1>
+        </div>
+        <form class="crear-lista" id="formLista">
+          <input id="nombreLista" type="text" maxlength="40" placeholder="Nombre de la nueva lista" aria-label="Nombre de la nueva lista">
+          <button class="btn-acento" type="submit">Crear lista</button>
+        </form>
+        <p class="aviso-lista" id="avisoLista"></p>
+        <div class="mosaico" id="tarjetasListas"></div>
+      </section>
+
+      <!-- Una lista -->
+      <section class="vista" id="vista-lista" hidden>
+        <div class="lista-cabecera">
+          <div class="collage" id="collageLista"></div>
+          <div class="lista-datos">
+            <h1 id="tituloLista"></h1>
+            <p class="detalle" id="detalleLista"></p>
+            <div class="acciones">
+              <button class="btn-acento" id="btnReproducirLista">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Reproducir
+              </button>
+              <button class="btn-opciones" id="btnMenuLista" aria-label="Opciones de la lista" aria-haspopup="menu">
+                <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <ul class="filas" id="cancionesLista"></ul>
+      </section>
+
+      <!-- Sonando ahora -->
+      <section class="vista" id="vista-sonando" hidden>
+        <div class="ahora">
+          <div class="vinilo vinilo-grande" id="viniloGrande" aria-hidden="true"><div class="vinilo-centro"></div></div>
+          <div class="ahora-datos">
+            <h1 id="sonandoTitulo">Nada sonando</h1>
+            <p class="detalle" id="sonandoOrigen">Elige una canción para verla aquí.</p>
+            <button class="btn-borde" data-ir="ajustes" data-ancla="ajusteDisco">Personalizar disco</button>
+          </div>
+        </div>
+        <div class="seccion-cabecera" id="cabeceraSiguientes" hidden>
+          <h2>A continuación</h2>
+        </div>
+        <ul class="filas" id="siguientes"></ul>
+      </section>
+
+      <!-- Ajustes -->
+      <section class="vista" id="vista-ajustes" hidden>
+        <div class="vista-cabecera">
+          <h1>Ajustes</h1>
+        </div>
+
+        <div class="ajuste">
+          <label for="ajusteNombre" class="ajuste-nombre">Nombre de la app</label>
+          <input id="ajusteNombre" type="text" maxlength="24" placeholder="Vinilo">
+        </div>
+
+        <fieldset class="ajuste">
+          <legend class="ajuste-nombre">Ícono</legend>
+          <div class="opciones-icono" id="opcionesIcono"></div>
+        </fieldset>
+
+        <fieldset class="ajuste">
+          <legend class="ajuste-nombre">Tema</legend>
+          <div class="segmentos">
+            <label><input type="radio" name="tema" value="claro"><span>Claro</span></label>
+            <label><input type="radio" name="tema" value="oscuro"><span>Oscuro</span></label>
+            <label><input type="radio" name="tema" value="auto"><span>Como el sistema</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="ajuste">
+          <legend class="ajuste-nombre">Tono de los botones</legend>
+          <div class="colores" id="opcionesColor"></div>
+        </fieldset>
+
+        <!-- Disco -->
+        <section class="ajuste-disco" id="ajusteDisco" aria-labelledby="tituloDisco">
+          <h2 id="tituloDisco">Disco</h2>
+          <div class="disco-editor">
+            <div class="vinilo vinilo-muestra" id="viniloMuestra" aria-hidden="true"><div class="vinilo-centro"></div></div>
+
+            <div class="disco-controles">
+              <div class="ajuste">
+                <span class="ajuste-nombre">Imagen de fondo</span>
+                <div class="acciones">
+                  <button class="btn-borde" id="btnImagenDisco">Elegir imagen</button>
+                  <button class="btn-texto" id="btnQuitarImagenDisco" hidden>Quitar imagen</button>
+                </div>
+              </div>
+
+              <fieldset class="ajuste">
+                <legend class="ajuste-nombre">Color del disco</legend>
+                <div class="colores" id="opcionesDisco"></div>
+              </fieldset>
+
+              <fieldset class="ajuste">
+                <legend class="ajuste-nombre">Centro</legend>
+                <div class="segmentos">
+                  <label><input type="radio" name="centro" value="portada"><span>Portada</span></label>
+                  <label><input type="radio" name="centro" value="liso"><span>Liso</span></label>
+                  <label><input type="radio" name="centro" value="ninguno"><span>Sin centro</span></label>
+                </div>
+              </fieldset>
+
+              <label class="interruptor">
+                <input type="checkbox" id="ajusteSurcos">
+                <span class="interruptor-pista" aria-hidden="true"></span>
+                <span>Mostrar surcos</span>
+              </label>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <!-- ================= Reproductor ================= -->
+    <footer class="reproductor" id="reproductor">
+      <button class="rep-cancion" id="btnAhora" aria-label="Ver la canción que suena">
+        <div class="vinilo vinilo-chico" id="repVinilo" aria-hidden="true"><div class="vinilo-centro"></div></div>
+        <div class="rep-textos">
+          <span class="rep-titulo" id="repTitulo">Elige una canción</span>
+          <span class="rep-origen" id="repOrigen">Nada sonando</span>
+        </div>
+      </button>
+
+      <div class="rep-centro">
+        <div class="rep-controles">
+          <button id="btnAnterior" class="rep-boton" aria-label="Anterior" disabled>
+            <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6L18 18V6z"/></svg>
+          </button>
+          <button id="btnPlay" class="rep-boton rep-play" aria-label="Reproducir" disabled></button>
+          <button id="btnSiguiente" class="rep-boton" aria-label="Siguiente" disabled>
+            <svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
+          </button>
+        </div>
+        <div class="rep-barra">
+          <span id="tiempoActual">0:00</span>
+          <input type="range" id="barraTiempo" min="0" max="100" step="0.1" value="0" aria-label="Avance de la canción" disabled>
+          <span id="tiempoTotal">0:00</span>
+        </div>
+      </div>
+
+      <div class="rep-volumen">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9zm12.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+        <input type="range" id="volumen" min="0" max="1" step="0.01" value="1" aria-label="Volumen">
+      </div>
+      <audio id="audio" preload="metadata"></audio>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

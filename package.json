@@ -1,0 +1,71 @@
+{
+  "name": "descargador-mp3",
+  "productName": "Vinilo",
+  "version": "1.0.0",
+  "description": "Descarga audio MP3 desde links de YouTube",
+  "author": "Descargador MP3",
+  "main": "main.js",
+  "scripts": {
+    "start": "node preparar.js && electron .",
+    "mac": "node preparar.js && electron-builder --mac",
+    "windows": "node preparar.js && electron-builder --win"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "com.descargador.mp3",
+    "productName": "Vinilo",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "servidor.js",
+      "public/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "node_modules/ffmpeg-static/**"
+    ],
+    "extraResources": [
+      {
+        "from": "bin",
+        "to": "bin"
+      }
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.music",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "artifactName": "Vinilo-Mac.${ext}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Vinilo-Windows.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "createDesktopShortcut": true
+    }
+  }
+}
